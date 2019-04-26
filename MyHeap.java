@@ -4,7 +4,7 @@ public class MyHeap{
     int[] test = {0, 3, 9, 7, 5, 4, 1};
     System.out.println("Test: " + Arrays.toString(test));
     System.out.println("heapifying");
-    heapify(test);
+    heapify(test, test.length-2);
     System.out.println("Test: " + Arrays.toString(test));
   }
   /*We discussed these 2 methods already:
@@ -24,7 +24,9 @@ public class MyHeap{
     try{
       int kidInd1 = 2*index + 1;
       int kidInd2 = 2*index + 2;
-      if (data[kidInd1] > data[kidInd2] && data[kidInd1] > data[index]){
+      if (kidInd1 >= size || kidInd2 >= size){
+        //stop the recurion -- this is for heapSort when sorted is at the back
+      } else if (data[kidInd1] > data[kidInd2] && data[kidInd1] > data[index]){
         swap(data, kidInd1, index);
         pushDown(data, size, kidInd1);
       } else if (data[kidInd2] >= data[kidInd1] && data[kidInd2] > data[index]){
@@ -75,10 +77,10 @@ public class MyHeap{
 
   /*- convert the array into a valid heap. [ should be O(n) ]
   */
-  public static void heapify(int[] data){
-    int s = ((data.length - 1) - 1) / 2; //get the last valid parent node
+  public static void heapify(int[] data, int size){
+    int s = ((size - 1) - 1) / 2; //get the last valid parent node
     for (int start = s; start>-1; start--){
-      pushDown(data, data.length, start); //working up to the top, push down
+      pushDown(data, size, start); //working up to the top, push down
     }
   }
 
