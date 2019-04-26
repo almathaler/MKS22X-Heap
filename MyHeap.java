@@ -1,12 +1,39 @@
 import java.util.Arrays;
 public class MyHeap{
-  public static void main(String[] args){
-    int[] test = {0, 3, 9, 7, 5, 4, 1};
-    System.out.println("Test: " + Arrays.toString(test));
-    System.out.println("heapsorting");
-    heapsort(test);
-    System.out.println("Test: " + Arrays.toString(test));
+  public static void main(String[]args){
+  System.out.println("Size\t\tMax Value\tquick/builtin ratio ");
+  int[]MAX_LIST = {10, 500, 1000000000};
+  for(int MAX : MAX_LIST){
+    for(int size = 31250; size < 500001; size*=2){
+      long qtime=0;
+      long btime=0;
+      //average of 5 sorts.
+      for(int trial = 0 ; trial <=30; trial++){
+        int []data1 = new int[size];
+        int []data2 = new int[size];
+        for(int i = 0; i < data1.length; i++){
+          data1[i] = (int)(Math.random()*MAX);
+          data2[i] = data1[i];
+        }
+        long t1,t2;
+        t1 = System.currentTimeMillis();
+        heapsort(data2);
+        t2 = System.currentTimeMillis();
+        qtime += t2 - t1;
+        t1 = System.currentTimeMillis();
+        Arrays.sort(data1);
+        t2 = System.currentTimeMillis();
+        btime+= t2 - t1;
+        if(!Arrays.equals(data1,data2)){
+          System.out.println("FAIL TO SORT!");
+          System.exit(0);
+        }
+      }
+      System.out.println(size +"\t\t"+MAX+"\t"+1.0*qtime/btime);
+    }
+    System.out.println();
   }
+}
   /*We discussed these 2 methods already:
   - size  is the number of elements in the data array.
   - push the element at index i downward into the correct position.
@@ -22,6 +49,13 @@ public class MyHeap{
       throw new IllegalArgumentException("index is out of bounds");
     }
     try{
+      //have to account for size 2!
+      if (size == 2){
+        int kidInd = index+1; //if you're pushing down the kid, will go to catch statement
+        if (data[kidInd] > data[index]){
+          swap(data, index, kidInd);
+        }
+      }
       int kidInd1 = 2*index + 1;
       int kidInd2 = 2*index + 2;
       if (kidInd1 >= size || kidInd2 >= size){
@@ -77,10 +111,10 @@ public class MyHeap{
 
   /*- convert the array into a valid heap. [ should be O(n) ]
   */
-  public static void heapify(int[] data, int size){
-    int s = ((size - 1) - 1) / 2; //get the last valid parent node
+  public static void heapify(int[] data){
+    int s = ((data.length-1) - 1) / 2; //get the last valid parent node
     for (int start = s; start>-1; start--){
-      pushDown(data, size, start); //working up to the top, push down
+      pushDown(data, data.length, start); //working up to the top, push down
     }
   }
 
@@ -88,9 +122,15 @@ public class MyHeap{
   largest value n-1 times. [ should be O(nlogn) ]
   */
   public static void heapsort(int[] data){
-    for (int i = 0; i<data.length; i++){
-      heapify(data, data.length - i); //minus i shows where sorted array begins
-      swap(data, 0, (data.length - i) - 1); //swap top of heap and next space avail
+    //System.out.println("current data: " + Arrays.toString(data));
+    heapify(data); //minus i shows where sorted array begins
+    //System.out.println("Heapified Data: " + Arrays.toString(data));
+    for (int i = 0; i<data.length-1; i++){
+      swap(data, 0, data.length-(1+i)); //swap first and last (that is being processed)
+      //System.out.println("Moved largest to back: " + Arrays.toString(data));
+      //System.out.println("size for pushDown: " + (data.length - i));
+      pushDown(data, (data.length-(i+1)), 0); //reorganize heap
+      //System.out.println("Pushed down small thing moved to the front: " + Arrays.toString(data) + "\n");
     }
   }
 
