@@ -1,4 +1,15 @@
+import java.util.Arrays;
 public class MyHeap{
+  public static void main(String[] args){
+    int[] test = {0, 3, 9, 7, 5, 4, 1};
+    System.out.println("Test: " + Arrays.toString(test));
+    System.out.println("pushing down the 3");
+    pushDown(test, 7, 1);
+    System.out.println("Test: " + Arrays.toString(test));
+    System.out.println("pushing up the 9");
+    pushUp(test, 2);
+    System.out.println("Test: " + Arrays.toString(test));
+  }
   /*We discussed these 2 methods already:
   - size  is the number of elements in the data array.
   - push the element at index i downward into the correct position.
@@ -10,7 +21,7 @@ public class MyHeap{
     if (size == 0){
       throw new IllegalArgumentException("no array");
     }
-    if (index > size || index < 0){
+    if (index >= size || index < 0){
       throw new IllegalArgumentException("index is out of bounds");
     }
     try{
@@ -21,7 +32,7 @@ public class MyHeap{
         pushDown(data, size, kidInd1);
       } else if (data[kidInd2] >= data[kidInd1] && data[kidInd2] > data[index]){
         swap(data, kidInd2, index);
-        pushDown(data, size kidInd2);
+        pushDown(data, size, kidInd2);
       } else{
         //stop recursion, neither the kids are larger
       }
@@ -40,16 +51,38 @@ public class MyHeap{
   [ should be O(logn) ]
   - precondition: index is between 0 and data.length-1 inclusive.
   */
-  private static void pushUp(int[]data,int index)
+  private static void pushUp(int[]data,int index){
+    if (index  >= data.length || index < 0){
+      throw new IllegalArgumentException("index out of bounds");
+    }
+    if (data.length == 0){
+      throw new IllegalArgumentException("data length 0");
+    }
+    try{
+      int parentInd = (index - 1) / 2;
+      int siblingInd = parentInd * 2 + 1;
+      if (siblingInd == index){
+        siblingInd++;
+      }
+      if (data[index] >= data[siblingInd] && data[index] > data[parentInd]){
+        swap(data, parentInd, index);
+        pushUp(data, parentInd);
+      }else{
+        //stop recursion
+      }
+    }catch(ArrayIndexOutOfBoundsException e){
+      //stop recursion, at top
+    }
+  }
 
 
   /*- convert the array into a valid heap. [ should be O(n) ]
   */
-  public static void heapify(int[])
+  public static void heapify(int[] data){}
 
   /*  - sort the array by converting it into a heap then removing the
   largest value n-1 times. [ should be O(nlogn) ]
   */
-  public static void heapsort(int[])
+  public static void heapsort(int[] data){}
 
 }
