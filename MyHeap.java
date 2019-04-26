@@ -3,11 +3,8 @@ public class MyHeap{
   public static void main(String[] args){
     int[] test = {0, 3, 9, 7, 5, 4, 1};
     System.out.println("Test: " + Arrays.toString(test));
-    System.out.println("pushing down the 3");
-    pushDown(test, 7, 1);
-    System.out.println("Test: " + Arrays.toString(test));
-    System.out.println("pushing up the 9");
-    pushUp(test, 2);
+    System.out.println("heapifying");
+    heapify(test);
     System.out.println("Test: " + Arrays.toString(test));
   }
   /*We discussed these 2 methods already:
@@ -17,7 +14,7 @@ public class MyHeap{
   This stops when a leaf is reached, or neither child is larger. [ should be O(logn) ]
   - precondition: index is between 0 and size-1 inclusive
   - precondition: size is between 0 and data.length-1 inclusive.*/
-  private static void pushDown(int[]data,int size,int index){
+  private static void pushDown(int[]data, int size, int index){
     if (size == 0){
       throw new IllegalArgumentException("no array");
     }
@@ -78,7 +75,12 @@ public class MyHeap{
 
   /*- convert the array into a valid heap. [ should be O(n) ]
   */
-  public static void heapify(int[] data){}
+  public static void heapify(int[] data){
+    int s = ((data.length - 1) - 1) / 2; //get the last valid parent node
+    for (int start = s; start>-1; start--){
+      pushDown(data, data.length, start); //working up to the top, push down
+    }
+  }
 
   /*  - sort the array by converting it into a heap then removing the
   largest value n-1 times. [ should be O(nlogn) ]
