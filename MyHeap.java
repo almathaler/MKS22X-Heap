@@ -3,8 +3,8 @@ public class MyHeap{
   public static void main(String[] args){
     int[] test = {0, 3, 9, 7, 5, 4, 1};
     System.out.println("Test: " + Arrays.toString(test));
-    System.out.println("heapifying");
-    heapify(test, test.length-2);
+    System.out.println("heapsorting");
+    heapsort(test);
     System.out.println("Test: " + Arrays.toString(test));
   }
   /*We discussed these 2 methods already:
@@ -87,6 +87,11 @@ public class MyHeap{
   /*  - sort the array by converting it into a heap then removing the
   largest value n-1 times. [ should be O(nlogn) ]
   */
-  public static void heapsort(int[] data){}
+  public static void heapsort(int[] data){
+    for (int i = 0; i<data.length; i++){
+      heapify(data, data.length - i); //minus i shows where sorted array begins
+      swap(data, 0, (data.length - i) - 1); //swap top of heap and next space avail
+    }
+  }
 
 }
